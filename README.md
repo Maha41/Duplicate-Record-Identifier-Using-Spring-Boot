@@ -7,7 +7,7 @@
 (B) - To run 'spring-boot-web-jsp' web application, use any Spring boot starter app
     - After the App start, go to url -http://localhost:8080/spring-boot-web-jsp/ on the local browser
 
-      1. To access the JSON objects, use following endpoints after you select the csv file :
+      1. To access the JSON objects, use following endpoints after you select the csv file location :
           - http://localhost:8080/spring-boot-web-jsp/user/all ( to access all person/objects)
           - http://localhost:8080/spring-boot-web-jsp/user/{id} (to access particular person/object id)
    
