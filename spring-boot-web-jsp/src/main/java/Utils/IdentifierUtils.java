@@ -38,13 +38,13 @@ public class IdentifierUtils {
 			Map<String, List<Person>> duplicateFirstName = new HashMap<>();
 			Map<String, List<Person>> duplicateLastName = new HashMap<>();
 			ArrayList<Person> people = new ArrayList<>();
-			for (Person p : personList.getPersonList()) { // find duplicate entries using email
+			for (Person p : personList.getPersonList()) { // make duplicate people list for manipulation
 
 				people.add(p);
 			}
 			boolean flag = false;
 			Map<String, List<Person>> personByCity = new HashMap<>();
-			for (Person p : personList.getPersonList()) { // find duplicate entries using email
+			for (Person p : personList.getPersonList()) { 
 
 				count++;
 				persons.put(String.valueOf(count), p);
@@ -52,11 +52,10 @@ public class IdentifierUtils {
 
 				duplicateEmail = people.stream().collect(Collectors.groupingBy(Person::getEmail));
 
-				if (duplicateEmail.get(p.getEmail()).size() >= 2) {
-					System.out.println("Duplicate Set " + count + " : ");
+				if (duplicateEmail.get(p.getEmail()).size() >= 2) {// find duplicate entries using email
+					System.out.println("Duplicate Set  : ");
 					System.out.println(p);
 					System.out.println();
-				
 					for (Person pe : duplicateEmail.get(p.getEmail())) {
 
 						duplicateList.add(p);
@@ -67,10 +66,9 @@ public class IdentifierUtils {
 					duplicatePhone = duplicateEmail.get(p.getEmail()).stream()
 							.collect(Collectors.groupingBy(Person::getPhoneNumber));
 
-					if (duplicatePhone.get(p.getPhoneNumber()).size() >= 2) {
-						System.out.println("Duplicate Set " + count + " : ");
+					if (duplicatePhone.get(p.getPhoneNumber()).size() >= 2) {// find duplicate entries using phone
+						System.out.println("Duplicate Set : ");
 						System.out.println(p);
-						System.out.println();
 						for (Person pe : duplicatePhone.get(p.getPhoneNumber())) {
 
 							duplicateList.add(p);
@@ -81,7 +79,7 @@ public class IdentifierUtils {
 						duplicateState = duplicatePhone.get(p.getPhoneNumber()).stream()
 								.collect(Collectors.groupingBy(Person::getState));
 						if (duplicateState.get(p.getState()).size() >= 2) {
-							for (Person pe : duplicateState.get(p.getState())) {
+							for (Person pe : duplicateState.get(p.getState())) {// find duplicate entries using state
 
 								break;
 							}
@@ -90,7 +88,7 @@ public class IdentifierUtils {
 							duplicateCity = duplicateState.get(p.getState()).stream()
 									.collect(Collectors.groupingBy(Person::getCity));
 							if (duplicateCity.get(p.getCity()).size() >= 2) {
-								for (Person pe : duplicateCity.get(p.getCity())) {
+								for (Person pe : duplicateCity.get(p.getCity())) {// find duplicate entries using city
 
 									break;
 								}
@@ -99,7 +97,7 @@ public class IdentifierUtils {
 								duplicateAddress1 = duplicateCity.get(p.getCity()).stream()
 										.collect(Collectors.groupingBy(Person::getAddress1));
 								if (duplicateAddress1.get(p.getAddress1()).size() >= 2) {
-									for (Person pe : duplicateAddress1.get(p.getAddress1())) {
+									for (Person pe : duplicateAddress1.get(p.getAddress1())) {// find duplicate entries using Address1
 
 										break;
 									}
@@ -108,7 +106,7 @@ public class IdentifierUtils {
 									duplicateCompany = duplicateAddress1.get(p.getAddress1()).stream()
 											.collect(Collectors.groupingBy(Person::getCompany));
 									if (duplicateCompany.get(p.getCompany()).size() >= 2) {
-										for (Person pe : duplicateCompany.get(p.getCompany())) {
+										for (Person pe : duplicateCompany.get(p.getCompany())) {// find duplicate entries using company
 
 											break;
 										}
@@ -117,7 +115,7 @@ public class IdentifierUtils {
 										duplicateLastName = duplicateCompany.get(p.getCompany()).stream()
 												.collect(Collectors.groupingBy(Person::getLastName));
 										if (duplicateLastName.get(p.getLastName()).size() >= 2) {
-											for (Person pe : duplicateLastName.get(p.getLastName())) {
+											for (Person pe : duplicateLastName.get(p.getLastName())) {// find duplicate entries using lastname
 
 												break;
 											}
@@ -126,18 +124,17 @@ public class IdentifierUtils {
 													.collect(Collectors.groupingBy(Person::getFirstName));
 
 											if (duplicateFirstName.get(p.getFirstName()).size() >= 2) {
-												System.out.println("Duplicate Set" + count + " : ");
+												System.out.println("Duplicate Set  : ");
 												System.out.println(p);
-												System.out.println();
-												for (Person pe : duplicateFirstName.get(p.getFirstName())) {
+												for (Person pe : duplicateFirstName.get(p.getFirstName())) {// find duplicate entries using firstname and add to duplicate set
 
 													duplicateList.add(p);
 													break;
 												}
 											} else {
+												System.out.println("");
 												System.out.println("Non Duplicate Set : ");
 												System.out.println(p);
-												System.out.println();
 											}
 
 										}
