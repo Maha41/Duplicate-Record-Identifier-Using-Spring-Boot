@@ -82,8 +82,8 @@ public class WelcomeController {
 		readPersonList = reader.loadCSVData(absolutePath);
 		IdentifierUtils identifier = new IdentifierUtils();
 		personList= identifier.Identifier(ps,readPersonList,absolutePath);
-		ClassifierUtils classifier = new ClassifierUtils();
-		nlppersonList= classifier.Classifier(ps,readPersonList,absolutePath);
+//		ClassifierUtils classifier = new ClassifierUtils();
+//		nlppersonList= classifier.Classifier(ps,readPersonList,absolutePath);
 		mv.addObject("duplicateList", personList);
 		mv.setViewName("details");
 		return mv;

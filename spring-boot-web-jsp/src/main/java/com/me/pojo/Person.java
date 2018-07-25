@@ -1,5 +1,9 @@
 package com.me.pojo;
 
+import java.util.Objects;
+
+import org.apache.commons.codec.language.Metaphone;
+
 public class Person {
 	 String personId;
 	    String firstName;
@@ -121,5 +125,72 @@ public class Person {
 	        this.phoneNumber = phoneNumber;
 	    }
 	    
-	
+	    @Override
+	    public String toString() {
+	        return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,", row,personId, firstName, lastName,
+	        		company, email,address1,address2,city, stateLong, state,zip,phoneNumber);
+		   
+	    }
+
+	    @Override
+	    public int hashCode() {
+	        int hash = 7;
+	        hash = 79 * hash + Objects.hashCode(this.personId);
+	        hash = 79 * hash + Objects.hashCode(this.firstName);
+	        hash = 79 * hash + Objects.hashCode(this.lastName);
+	        hash = 79 * hash + Objects.hashCode(this.company);
+	        hash = 79 * hash + Objects.hashCode(this.state);
+	        hash = 79 * hash + Objects.hashCode(this.city);
+	        hash = 79 * hash + Objects.hashCode(this.email);
+	        hash = 79 * hash + Objects.hashCode(this.phoneNumber);
+	        return hash;
+	    }
+
+	    @Override
+	    public boolean equals(Object obj) {
+	        if (obj == null) {
+	            return false;
+	        }
+	        if (getClass() != obj.getClass()) {
+	            return false;
+	        }
+	        final Person other = (Person) obj;
+	        if (!Objects.equals(this.personId, other.personId)) {
+	            return false;
+	        }
+	        
+	      final  Metaphone similarName = new Metaphone();
+	      if (!similarName.isMetaphoneEqual(this.firstName, other.firstName)) {
+	            return false;
+	        }
+	        
+	        
+	        if (!similarName.isMetaphoneEqual(this.lastName, other.lastName)) {
+	            return false;
+	        }
+	        
+	        if (!similarName.isMetaphoneEqual(this.company, other.company)) {
+	            return false;
+	        }
+	        if (!similarName.isMetaphoneEqual(this.city, other.city)) {
+	            return false;
+	        }
+	        if (!similarName.isMetaphoneEqual(this.state, other.state)) {
+	            return false;
+	        }
+	        if (!similarName.isMetaphoneEqual(this.address1, other.address1)) {
+	            return false;
+	        }
+	        if (!Objects.equals(this.email, other.email)) {
+	            return false;
+	        }
+	        if (!Objects.equals(this.phoneNumber, other.phoneNumber)) {
+	            return false;
+	        }
+	        return true;
+	    }
+	    
+	    
+	    
+	    
 }

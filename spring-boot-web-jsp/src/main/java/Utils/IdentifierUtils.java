@@ -14,80 +14,151 @@ import com.csvreader.CsvReader;
 import com.me.pojo.Person;
 import com.me.pojo.PersonList;
 import com.me.service.PersonService;
+import java.util.stream.Collectors;
 
 public class IdentifierUtils {
 
-	public ArrayList<Person> Identifier(PersonService ps,PersonList personList, String filename) {
-	
+	public ArrayList<Person> Identifier(PersonService ps, PersonList personList, String filename) {
+
 		ArrayList<Person> duplicateList = new ArrayList<Person>();
 
-	try {
-
+		try {
 
 			int count = 0;
 			Map<String, Integer> data = new HashMap<String, Integer>();
 
 			Hashtable<String, Person> persons = new Hashtable<String, Person>();
 
+			Map<String, List<Person>> duplicateEmail = new HashMap<>();
+			Map<String, List<Person>> duplicatePhone = new HashMap<>();
+			Map<String, List<Person>> duplicateCompany = new HashMap<>();
+			Map<String, List<Person>> duplicateState = new HashMap<>();
+			Map<String, List<Person>> duplicateCity = new HashMap<>();
+			Map<String, List<Person>> duplicateAddress1 = new HashMap<>();
+			Map<String, List<Person>> duplicateFirstName = new HashMap<>();
+			Map<String, List<Person>> duplicateLastName = new HashMap<>();
+			ArrayList<Person> people = new ArrayList<>();
 			for (Person p : personList.getPersonList()) { // find duplicate entries using email
+
+				people.add(p);
+			}
+			boolean flag = false;
+			Map<String, List<Person>> personByCity = new HashMap<>();
+			for (Person p : personList.getPersonList()) { // find duplicate entries using email
+
 				count++;
 				persons.put(String.valueOf(count), p);
 				ps.setPersons(persons);
-				String Company = p.getCompany().replaceAll("[-,.]", "").replaceAll("\\s", " ").trim();
-				// Saves the email and the number of occurrences as its value
-				if (!data.containsKey(p.getEmail())) {
-					data.put(p.getEmail(), 1);
-				} else {
-					data.put(p.getEmail(), data.get(p.getEmail()) + 1);
-					
 
-				}
+				duplicateEmail = people.stream().collect(Collectors.groupingBy(Person::getEmail));
 
+				if (duplicateEmail.get(p.getEmail()).size() >= 2) {
+					System.out.println("Duplicate Set " + count + " : ");
+					System.out.println(p);
+					System.out.println();
 				
-			}
-			System.out.println("###################################### Duplicate Sets ###########################################"); // Print duplicate entries on console
-			int index =0;
-			for (Person p : personList.getPersonList()) {
-				for (Map.Entry<String, Integer> entry : data.entrySet()) {
-					String key = entry.getKey();
-					Object value = entry.getValue();
-					if ((p.getEmail().equals(key)) && data.get(key) != 1) {
+					for (Person pe : duplicateEmail.get(p.getEmail())) {
+
 						duplicateList.add(p);
-						System.out.println("********************************Set "+ index + "*********************************");
-						System.out.println(
-								p.getPersonId() + " " + p.getFirstName() + " " + p.getLastName()
-										+ " " + p.getAddress1() + " " + p.getAddress2() + " " + p.getCompany() + " "
-										+ p.getEmail() + " " + p.getPhoneNumber() + " " + p.getRow());
-						index++;
+						break;
+
 					}
-				}
-			}
-			
-			System.out.println("###################################### Non- Duplicate Sets ###########################################"); // Print duplicate entries on console
-					
-			for (Map.Entry<String, Integer> entry : data.entrySet()) { //Print non- duplicate entries to the console
-				String key = entry.getKey();
-				Object value = entry.getValue();
+				} else {
+					duplicatePhone = duplicateEmail.get(p.getEmail()).stream()
+							.collect(Collectors.groupingBy(Person::getPhoneNumber));
 
-				if (data.get(key) == 1) {
-					for (Person p : personList.getPersonList()) {
+					if (duplicatePhone.get(p.getPhoneNumber()).size() >= 2) {
+						System.out.println("Duplicate Set " + count + " : ");
+						System.out.println(p);
+						System.out.println();
+						for (Person pe : duplicatePhone.get(p.getPhoneNumber())) {
 
-						if (p.getEmail().equals(key)) {
-							
-							System.out.println( p.getPersonId() + " " + p.getFirstName() + " " + p.getLastName()
-											+ " " + p.getAddress1() + " " + p.getAddress2() + " " + p.getCompany() + " "
-											+ p.getEmail() + " " + p.getPhoneNumber() + " " + p.getRow());
+							duplicateList.add(p);
+							break;
 						}
+					} else {
+
+						duplicateState = duplicatePhone.get(p.getPhoneNumber()).stream()
+								.collect(Collectors.groupingBy(Person::getState));
+						if (duplicateState.get(p.getState()).size() >= 2) {
+							for (Person pe : duplicateState.get(p.getState())) {
+
+								break;
+							}
+						} else {
+
+							duplicateCity = duplicateState.get(p.getState()).stream()
+									.collect(Collectors.groupingBy(Person::getCity));
+							if (duplicateCity.get(p.getCity()).size() >= 2) {
+								for (Person pe : duplicateCity.get(p.getCity())) {
+
+									break;
+								}
+							} else {
+
+								duplicateAddress1 = duplicateCity.get(p.getCity()).stream()
+										.collect(Collectors.groupingBy(Person::getAddress1));
+								if (duplicateAddress1.get(p.getAddress1()).size() >= 2) {
+									for (Person pe : duplicateAddress1.get(p.getAddress1())) {
+
+										break;
+									}
+								} else {
+
+									duplicateCompany = duplicateAddress1.get(p.getAddress1()).stream()
+											.collect(Collectors.groupingBy(Person::getCompany));
+									if (duplicateCompany.get(p.getCompany()).size() >= 2) {
+										for (Person pe : duplicateCompany.get(p.getCompany())) {
+
+											break;
+										}
+									} else {
+
+										duplicateLastName = duplicateCompany.get(p.getCompany()).stream()
+												.collect(Collectors.groupingBy(Person::getLastName));
+										if (duplicateLastName.get(p.getLastName()).size() >= 2) {
+											for (Person pe : duplicateLastName.get(p.getLastName())) {
+
+												break;
+											}
+										} else {
+											duplicateFirstName = duplicateLastName.get(p.getLastName()).stream()
+													.collect(Collectors.groupingBy(Person::getFirstName));
+
+											if (duplicateFirstName.get(p.getFirstName()).size() >= 2) {
+												System.out.println("Duplicate Set" + count + " : ");
+												System.out.println(p);
+												System.out.println();
+												for (Person pe : duplicateFirstName.get(p.getFirstName())) {
+
+													duplicateList.add(p);
+													break;
+												}
+											} else {
+												System.out.println("Non Duplicate Set : ");
+												System.out.println(p);
+												System.out.println();
+											}
+
+										}
+
+									}
+								}
+
+							}
+						}
+
 					}
 				}
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		
+
 		} finally {
 
 		}
 		return duplicateList;
 	}
+
 }
