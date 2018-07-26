@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class IdentifierUtils {
 
-	public ArrayList<Person> Identifier(PersonService ps, PersonList personList, String filename) {
+	public ArrayList<Person> Identifier(PersonService ps, PersonList personList) {
 
 		ArrayList<Person> duplicateList = new ArrayList<Person>();
 
@@ -37,10 +37,28 @@ public class IdentifierUtils {
 			Map<String, List<Person>> duplicateFirstName = new HashMap<>();
 			Map<String, List<Person>> duplicateLastName = new HashMap<>();
 			ArrayList<Person> people = new ArrayList<>();
+			
+			String[] stopwords = new String[] { "A ","a ", "The ", "the ", "&" , ".", ",", "-"}; // Stop words array
+			
 			for (Person p : personList.getPersonList()) { // make duplicate people list for manipulation
 
+				for (int jj = 0; jj < 4; jj++) { //remove stop words
+					if (stopwords[jj].contains(p.getCompany().toLowerCase())) {
+						p.getCompany().replaceAll(stopwords[jj], "");
+						p.getState().replaceAll(stopwords[jj], "");
+						p.getCity().replaceAll(stopwords[jj], "");
+						p.getAddress1().replaceAll(stopwords[jj], "");
+						p.getPhoneNumber().replaceAll(stopwords[jj], "");
+						
+					}
+				}
 				people.add(p);
+				
 			}
+
+			
+			duplicateEmail = people.stream().collect(Collectors.groupingBy(Person::getEmail));
+			
 
 			for (Person p : personList.getPersonList()) {
 
@@ -48,66 +66,67 @@ public class IdentifierUtils {
 				persons.put(String.valueOf(count), p);
 				ps.setPersons(persons);
 
-				duplicateEmail = people.stream().collect(Collectors.groupingBy(Person::getEmail));
-
+			
 				if (duplicateEmail.get(p.getEmail()).size() >= 2) {// find duplicate entries using email
 					duplicate_set++;
 					System.out.println("Duplicate Set " + duplicate_set + " : ");
 					System.out.println(p + "\n");
 					duplicateList.add(p);
+people.remove(p);
 				} else {
-					duplicatePhone = duplicateEmail.get(p.getEmail()).stream()
+					duplicatePhone = people.stream()
 							.collect(Collectors.groupingBy(Person::getPhoneNumber));
-
 					if (duplicatePhone.get(p.getPhoneNumber()).size() >= 2) {// find duplicate entries using phone
 						duplicate_set++;
 						System.out.println("Duplicate Set " + duplicate_set + " : ");
 						System.out.println(p + "\n");
 						duplicateList.add(p);
+						people.remove(p);
 
 					} else {
 
-						duplicateState = duplicatePhone.get(p.getPhoneNumber()).stream()
+						duplicateState = people.stream()
 								.collect(Collectors.groupingBy(Person::getState));// find duplicate entries using state
 
-						if (duplicateState.get(p.getState()).size() >= 2) {// find duplicate entries using state
+						duplicateCity = people.stream() // find duplicate entries using City
+								.collect(Collectors.groupingBy(Person::getCity));
+
+						duplicateAddress1 = people.stream() // find duplicate entries using Address1
+								.collect(Collectors.groupingBy(Person::getAddress1));
+
+						duplicateCompany = people.stream() // find duplicate entries using Company
+								.collect(Collectors.groupingBy(Person::getCompany));
+
+						duplicateLastName = people.stream() // find duplicate entries using LastName
+								.collect(Collectors.groupingBy(Person::getLastName));
+
+						duplicateFirstName = people.stream()
+								.collect(Collectors.groupingBy(Person::getFirstName));// find duplicate entries using FirstName
+
+
+						if ((duplicateState.get(p.getState()).size() >= 2
+								|| duplicateState.get(p.getState()).equals(""))
+								&& (duplicateCity.get(p.getCity()).size() >= 2
+										|| duplicateState.get(p.getState()).equals(""))
+								&& (duplicateAddress1.get(p.getAddress1()).size() >= 2
+										|| duplicateState.get(p.getState()).equals(""))
+								&& (duplicateCompany.get(p.getCompany()).size() >= 2
+										|| duplicateState.get(p.getState()).equals(""))
+								&& (duplicateLastName.get(p.getLastName()).size() >= 2)
+								&& (duplicateFirstName.get(p.getFirstName()).size() >= 2)) {
+							duplicate_set++;
+							System.out.println("Duplicate Set " + duplicate_set + " : ");
+							System.out.println(p + "\n");
+							duplicateList.add(p);
+							people.remove(p);
 
 						} else {
-
-							duplicateCity = duplicateState.get(p.getState()).stream()
-									.collect(Collectors.groupingBy(Person::getCity));
-
-							duplicateAddress1 = duplicateCity.get(p.getCity()).stream()
-									.collect(Collectors.groupingBy(Person::getAddress1));
-
-							duplicateCompany = duplicateAddress1.get(p.getAddress1()).stream()
-									.collect(Collectors.groupingBy(Person::getCompany));
-
-							duplicateLastName = duplicateCompany.get(p.getCompany()).stream()
-									.collect(Collectors.groupingBy(Person::getLastName));
-
-							duplicateFirstName = duplicateLastName.get(p.getLastName()).stream()
-									.collect(Collectors.groupingBy(Person::getFirstName));
-
-							if ((duplicateState.get(p.getState()).size() >= 2)
-									&& (duplicateCity.get(p.getCity()).size() >= 2)
-									&& (duplicateAddress1.get(p.getAddress1()).size() >= 2)
-									&& (duplicateCompany.get(p.getCompany()).size() >= 2)
-									&& (duplicateLastName.get(p.getLastName()).size() >= 2)
-									&& (duplicateFirstName.get(p.getFirstName()).size() >= 2)) {
-								duplicate_set++;
-								System.out.println("Duplicate Set " + duplicate_set + " : ");
-								System.out.println(p + "\n");
-								duplicateList.add(p);
-
-							} else {
-								System.out.println("Non Duplicate Set : ");
-								System.out.println(p + "\n");
-							}
-
+							System.out.println("Non Duplicate Set : ");
+							System.out.println(p + "\n");
 						}
 
 					}
+
 				}
 			}
 

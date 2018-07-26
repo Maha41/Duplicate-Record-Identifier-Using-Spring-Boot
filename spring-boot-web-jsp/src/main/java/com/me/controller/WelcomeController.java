@@ -65,27 +65,35 @@ public class WelcomeController {
 		return "filename";
 	}
 
-	@SuppressWarnings("unlikely-arg-type")
+	
 	@RequestMapping("/details") // display duplicates 
 	public ModelAndView details(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws FileNotFoundException, URISyntaxException {
 		ModelAndView mv = new ModelAndView();
+		
 		String Name = request.getParameter("name");
 		mv.addObject("filename", Name);
 
 		ArrayList<Person> personList = new ArrayList<Person>();
-		ArrayList<Person> nlppersonList = new ArrayList<Person>();
+		
+		
 		File file = new File(request.getParameter("filename"));
 		String absolutePath = file.getAbsolutePath();
 		System.out.println(absolutePath);
+		
 		CSVReader reader = new CSVReader();
 		PersonList readPersonList = new PersonList();
+		
 		readPersonList = reader.loadCSVData(absolutePath);
+		
 		IdentifierUtils identifier = new IdentifierUtils();
-		personList= identifier.Identifier(ps,readPersonList,absolutePath);
+		personList= identifier.Identifier(ps,readPersonList);
+		
 		ClassifierUtils classifier = new ClassifierUtils();
-		nlppersonList= classifier.Classifier(ps,readPersonList,absolutePath);
+	    classifier.Classifier(readPersonList);
+		
 		mv.addObject("duplicateList", personList);
 		mv.setViewName("details");
+		
 		return mv;
 
 	}
