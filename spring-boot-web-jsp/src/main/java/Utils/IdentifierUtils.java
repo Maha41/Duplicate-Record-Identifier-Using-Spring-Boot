@@ -16,6 +16,8 @@ import com.me.pojo.PersonList;
 import com.me.service.PersonService;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.ListUtils;
+
 public class IdentifierUtils {
 
 	public ArrayList<Person> Identifier(PersonService ps, PersonList personList) {
@@ -70,32 +72,24 @@ public class IdentifierUtils {
 				if (duplicateEmail.get(p.getEmail()).size() >= 2) {// find duplicate entries using email
 					duplicate_set++;
 					System.out.println("Duplicate Set " + duplicate_set + " : ");
-					System.out.println(p + "\n");
-					duplicateList.add(p);
-people.remove(p);
-				} else {
+					System.out.println(duplicateEmail.get(p.getEmail()) + "\n");
+					duplicateList.addAll(duplicateEmail.get(p.getEmail()));
+					people.remove(p);
+
+				}
+			
+		
 					duplicatePhone = people.stream()
 							.collect(Collectors.groupingBy(Person::getPhoneNumber));
-					if (duplicatePhone.get(p.getPhoneNumber()).size() >= 2) {// find duplicate entries using phone
+					if (duplicatePhone.get(p.getPhoneNumber()).size() >= 2 && !duplicatePhone.get(p.getPhoneNumber()).equals("")) {// find duplicate entries using phone
 						duplicate_set++;
 						System.out.println("Duplicate Set " + duplicate_set + " : ");
-						System.out.println(p + "\n");
-						duplicateList.add(p);
+						System.out.println(duplicatePhone.get(p.getPhoneNumber()) + "\n");
+						duplicateList.addAll(duplicatePhone.get(p.getPhoneNumber()));
 						people.remove(p);
-
-					} else {
-
-						duplicateState = people.stream()
-								.collect(Collectors.groupingBy(Person::getState));// find duplicate entries using state
-
-						duplicateCity = people.stream() // find duplicate entries using City
-								.collect(Collectors.groupingBy(Person::getCity));
-
-						duplicateAddress1 = people.stream() // find duplicate entries using Address1
-								.collect(Collectors.groupingBy(Person::getAddress1));
-
-						duplicateCompany = people.stream() // find duplicate entries using Company
-								.collect(Collectors.groupingBy(Person::getCompany));
+					} 
+					
+			
 
 						duplicateLastName = people.stream() // find duplicate entries using LastName
 								.collect(Collectors.groupingBy(Person::getLastName));
@@ -104,31 +98,27 @@ people.remove(p);
 								.collect(Collectors.groupingBy(Person::getFirstName));// find duplicate entries using FirstName
 
 
-						if ((duplicateState.get(p.getState()).size() >= 2
-								|| duplicateState.get(p.getState()).equals(""))
-								&& (duplicateCity.get(p.getCity()).size() >= 2
-										|| duplicateState.get(p.getState()).equals(""))
-								&& (duplicateAddress1.get(p.getAddress1()).size() >= 2
-										|| duplicateState.get(p.getState()).equals(""))
-								&& (duplicateCompany.get(p.getCompany()).size() >= 2
-										|| duplicateState.get(p.getState()).equals(""))
-								&& (duplicateLastName.get(p.getLastName()).size() >= 2)
+						if ((duplicateLastName.get(p.getLastName()).size() >= 2)
 								&& (duplicateFirstName.get(p.getFirstName()).size() >= 2)) {
 							duplicate_set++;
 							System.out.println("Duplicate Set " + duplicate_set + " : ");
-							System.out.println(p + "\n");
-							duplicateList.add(p);
+							System.out.println(duplicateFirstName.get(p.getFirstName()) + "\n");
+							duplicateList.addAll(duplicateFirstName.get(p.getFirstName()));
 							people.remove(p);
+						
 
-						} else {
+						}else {
 							System.out.println("Non Duplicate Set : ");
 							System.out.println(p + "\n");
 						}
+						
+			}		
 
-					}
+	
 
-				}
-			}
+
+				
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();

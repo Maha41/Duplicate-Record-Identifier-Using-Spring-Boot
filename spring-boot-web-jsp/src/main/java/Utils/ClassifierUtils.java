@@ -53,8 +53,7 @@ public class ClassifierUtils {
 					}
 				}
 				people.add(p);
-				System.out.println(p + "\n");
-
+			
 			}
 
 			duplicateEmail = people.stream().collect(Collectors.groupingBy(Person::getEmail));
@@ -64,12 +63,11 @@ public class ClassifierUtils {
 
 				if (duplicateEmail.get(p.getEmail()).size() >= 2) {// find duplicate entries using email
 					duplicate_set++;
-					System.out.println("Duplicate Set " + duplicate_set + " : ");
-					System.out.println(p + "\n");
-					duplicateList.add(p);
-					//people.remove(p);
-					w_email += 1000000000;
-					System.out.println("Weight for email number : " + w_email);
+//					System.out.println("Duplicate Set " + duplicate_set + " : ");
+//					System.out.println(p + "\n");
+//					
+//					w_email += 1000000000;
+//					System.out.println("Weight for email number : " + w_email);
 
 				}
 				}
@@ -85,7 +83,7 @@ public class ClassifierUtils {
 			e.getMessage();
 
 		} finally {
-				System.out.println("Model trained using duplicate emails and phonenumber");
+				System.out.println("Model trained using duplicate emails");
 		}
 
 
