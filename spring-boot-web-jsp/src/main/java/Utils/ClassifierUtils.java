@@ -63,11 +63,11 @@ public class ClassifierUtils {
 
 				if (duplicateEmail.get(p.getEmail()).size() >= 2) {// find duplicate entries using email
 					duplicate_set++;
-//					System.out.println("Duplicate Set " + duplicate_set + " : ");
-//					System.out.println(p + "\n");
-//					
-//					w_email += 1000000000;
-//					System.out.println("Weight for email number : " + w_email);
+					System.out.println("Duplicate Set " + duplicate_set + " : ");
+					System.out.println(p + "\n");
+					
+					w_email += 1000000000;
+					System.out.println("Weight for email number : " + w_email);
 
 				}
 				}

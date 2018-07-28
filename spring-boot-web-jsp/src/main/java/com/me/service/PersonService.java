@@ -19,9 +19,6 @@ public class PersonService {
 		this.persons = persons;
 	}
 
-	public PersonService() {
-		
-	}
 
 	public Person getPerson(String id) {
 		if (persons.containsKey(id))

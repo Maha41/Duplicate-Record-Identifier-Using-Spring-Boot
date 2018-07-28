@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import com.csvreader.CsvReader;
@@ -59,7 +60,7 @@ public class IdentifierUtils {
 			}
 
 			
-			duplicateEmail = people.stream().collect(Collectors.groupingBy(Person::getEmail));
+			
 			
 
 			for (Person p : personList.getPersonList()) {
@@ -67,30 +68,33 @@ public class IdentifierUtils {
 				count++;
 				persons.put(String.valueOf(count), p);
 				ps.setPersons(persons);
-
-			
+if((duplicateEmail.get(p.getEmail())!=null)) {
+	duplicateEmail = people.stream().collect(Collectors.groupingBy(Person::getEmail));
 				if (duplicateEmail.get(p.getEmail()).size() >= 2) {// find duplicate entries using email
 					duplicate_set++;
 					System.out.println("Duplicate Set " + duplicate_set + " : ");
 					System.out.println(duplicateEmail.get(p.getEmail()) + "\n");
 					duplicateList.addAll(duplicateEmail.get(p.getEmail()));
-					people.remove(p);
+					people.removeAll(duplicateEmail.get(p.getEmail()));
+					System.out.println(people);
 
 				}
 			
-		
+				else if (duplicatePhone.get(p.getPhoneNumber())!=null) {	
 					duplicatePhone = people.stream()
 							.collect(Collectors.groupingBy(Person::getPhoneNumber));
-					if (duplicatePhone.get(p.getPhoneNumber()).size() >= 2 && !duplicatePhone.get(p.getPhoneNumber()).equals("")) {// find duplicate entries using phone
+					if (duplicatePhone.get(p.getPhoneNumber()).size() >= 2) {// find duplicate entries using phone
 						duplicate_set++;
 						System.out.println("Duplicate Set " + duplicate_set + " : ");
 						System.out.println(duplicatePhone.get(p.getPhoneNumber()) + "\n");
 						duplicateList.addAll(duplicatePhone.get(p.getPhoneNumber()));
-						people.remove(p);
-					} 
-					
+						people.removeAll(duplicatePhone.get(p.getPhoneNumber()));
+					} else {
+						
+					}
+				}		
 			
-
+}else {
 						duplicateLastName = people.stream() // find duplicate entries using LastName
 								.collect(Collectors.groupingBy(Person::getLastName));
 
@@ -98,23 +102,26 @@ public class IdentifierUtils {
 								.collect(Collectors.groupingBy(Person::getFirstName));// find duplicate entries using FirstName
 
 
-						if ((duplicateLastName.get(p.getLastName()).size() >= 2)
+						if ((duplicateFirstName.get(p.getFirstName())!=null) && (duplicateLastName.get(p.getLastName())!=null) 
+								&& (duplicateLastName.get(p.getLastName()).size() >= 2)
 								&& (duplicateFirstName.get(p.getFirstName()).size() >= 2)) {
 							duplicate_set++;
 							System.out.println("Duplicate Set " + duplicate_set + " : ");
 							System.out.println(duplicateFirstName.get(p.getFirstName()) + "\n");
 							duplicateList.addAll(duplicateFirstName.get(p.getFirstName()));
-							people.remove(p);
-						
-
-						}else {
+							people.removeAll(duplicateFirstName.get(p.getFirstName()));
+							//people.removeAll(duplicateLastName.get(p.getLastName()));
+							
+							
+							
+						}else if(!duplicateList.contains(p)) {
 							System.out.println("Non Duplicate Set : ");
 							System.out.println(p + "\n");
 						}
 						
 			}		
 
-	
+			}
 
 
 				
