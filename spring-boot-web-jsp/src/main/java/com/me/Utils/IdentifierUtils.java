@@ -1,32 +1,31 @@
-package Utils;
+package com.me.Utils;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import com.csvreader.CsvReader;
 import com.me.pojo.Person;
 import com.me.pojo.PersonList;
 import com.me.service.PersonService;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.stream.Collectors;
 
 public class IdentifierUtils {
 
-	public ArrayList<Person> Identifier(PersonService ps, PersonList personList) {
+	@Autowired
+	private PersonService ps;
 
-		ArrayList<Person> duplicateList = new ArrayList<Person>();
+	public ArrayList<Person> Identifier(PersonList personList) {
+
+		ArrayList<Person> duplicateList = new ArrayList<>();
 
 		try {
-
 			int count = 0;
 			int duplicate_set = 0;
-			Hashtable<String, Person> persons = new Hashtable<String, Person>();
+			Hashtable<String, Person> persons = new Hashtable<>();
 
 			Map<String, List<Person>> duplicateEmail = new HashMap<>();
 			Map<String, List<Person>> duplicatePhone = new HashMap<>();
@@ -37,9 +36,9 @@ public class IdentifierUtils {
 			Map<String, List<Person>> duplicateFirstName = new HashMap<>();
 			Map<String, List<Person>> duplicateLastName = new HashMap<>();
 			ArrayList<Person> people = new ArrayList<>();
-			
+
 			String[] stopwords = new String[] { "A ","a ", "The ", "the ", "&" , ".", ",", "-"}; // Stop words array
-			
+
 			for (Person p : personList.getPersonList()) { // make duplicate people list for manipulation
 
 				for (int jj = 0; jj < 4; jj++) { //remove stop words
@@ -49,16 +48,16 @@ public class IdentifierUtils {
 						p.getCity().replaceAll(stopwords[jj], "");
 						p.getAddress1().replaceAll(stopwords[jj], "");
 						p.getPhoneNumber().replaceAll(stopwords[jj], "");
-						
+
 					}
 				}
 				people.add(p);
-				
+
 			}
 
-			
+
 			duplicateEmail = people.stream().collect(Collectors.groupingBy(Person::getEmail));
-			
+
 
 			for (Person p : personList.getPersonList()) {
 
@@ -66,7 +65,7 @@ public class IdentifierUtils {
 				persons.put(String.valueOf(count), p);
 				ps.setPersons(persons);
 
-			
+
 				if (duplicateEmail.get(p.getEmail()).size() >= 2) {// find duplicate entries using email
 					duplicate_set++;
 					System.out.println("Duplicate Set " + duplicate_set + " : ");

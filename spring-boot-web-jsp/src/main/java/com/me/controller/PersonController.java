@@ -23,29 +23,28 @@ import com.me.service.PersonService;
 
 @RestController
 @RequestMapping("/user")
-@ComponentScan({ "com.me.service" })
 public class PersonController {
 
 	public static final Logger logger = LoggerFactory.getLogger(PersonController.class);
 
 	@Autowired
-	PersonService ps;
+	private PersonService ps;
 
 	@RequestMapping("/all")
 	public Hashtable<String, Person> getAll(Map<String, Object> model, HttpServletRequest request,
 			HttpServletResponse response) { // get all csv records in json format
 
 		Hashtable<String, Person> result = ps.getAll();
-		
+
 		return result;
 	}
 
 	@RequestMapping("{id}")
-	public Person getPerson(@PathVariable("id") String id) { // get person record accoring to id from csv
+	public ResponseEntity<Person> getPerson(@PathVariable("id") String id) { // get person record accoring to id from csv
 
 		Person result = ps.getPerson(id);
-		
-		return result;
+
+		return ResponseEntity.ok(result);
 
 	}
 

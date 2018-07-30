@@ -1,6 +1,5 @@
 package com.me.service;
 
-
 import java.util.Hashtable;
 
 import org.springframework.stereotype.Service;
@@ -9,7 +8,7 @@ import com.me.pojo.Person;
 
 @Service
 public class PersonService {
-	
+
 	Hashtable<String, Person> persons = new Hashtable<String, Person>();
 	public Hashtable<String, Person> getPersons() {
 		return persons;
@@ -20,7 +19,7 @@ public class PersonService {
 	}
 
 	public PersonService() {
-		
+
 	}
 
 	public Person getPerson(String id) {
@@ -32,5 +31,5 @@ public class PersonService {
 	public Hashtable<String, Person> getAll() {
 		return persons;
 	}
-	
+
 }

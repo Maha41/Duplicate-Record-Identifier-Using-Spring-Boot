@@ -1,4 +1,4 @@
-package Utils;
+package com.me.Utils;
 
 import java.io.FileReader;
 import com.csvreader.CsvReader;
@@ -12,14 +12,14 @@ public class CSVReader {
 	  	{
 		  try
 			{
-		
+
 		CsvReader reader = new CsvReader(
 				new FileReader(filename));
-		
+
 		boolean readHeader = false;
 		int count = 0;
 		while (reader.readRecord()) {
-			
+
 			if (readHeader) {
 			Person person = personList.addPerson();
 			String personId = reader.get(0).replaceAll("\\s", " ").trim();
@@ -53,12 +53,12 @@ public class CSVReader {
 			readHeader = true;
 		}
 			}
-		 catch (Exception ex) 
+		 catch (Exception ex)
 	        {
 	            System.out.println("Exception while loading CSV Data");
 	        }
-		  
+
 		return personList;
-	
+
 	  }
 }
